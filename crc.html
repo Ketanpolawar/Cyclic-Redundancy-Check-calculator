@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+         @import url(
+"https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: "Poppins", sans-serif;
+}
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    color: #E5EFC1;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #557B83;
+  }
+h1{
+  color: #E5EFC1;
+}
+  .container {
+    border-style: solid;
+    width: 600px;
+    padding: 20px;
+    border-color:white;
+    border-width: 10px;
+    border-radius: 10px;
+    background-color:#557B83;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  label {
+    color: #E5EFC1;
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 5px;
+    font-size: 14px;
+  }
+
+  button {
+      appearance: button;
+      background-color: white;
+      border: 0 solid #557B83;
+      border-radius: .5rem;
+      box-sizing: border-box;
+      color: #557B83;
+      column-gap: 1rem;
+      cursor: pointer;
+      display: flex;
+      font-family: ui-sans-serif,system-ui,-apple-system,system-ui,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+      font-size: 100%;
+      font-weight: 700;
+      line-height: 24px;
+      margin: 0;
+      outline: 2px solid transparent;
+      padding: 1rem 1.5rem;
+      text-align: center;
+      text-transform: none;
+      transition: all .1s cubic-bezier(.4, 0, .2, 1);
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulationok;
+      box-shadow: -6px 8px 10px #51290a1a,0px 2px 2px #51290a33;
+
+  }
+
+  button:hover {
+    background-color: #45a049;
+  }
+
+  #remainder,
+  #encodedData,
+  #result {
+    margin-top: 10px;
+    font-size: 16px;
+  }
+    </style>
+  </head>
+  <body>
+    
+    
+  </head>
+  <body>
+    <div class="container">
+        <center>
+          <h1>CRC GENERATOR</h1>
+          <br>
+          <br>
+          <br>
+            <label for="dividend">Dividend:</label>
+        <input type="text" id="dividend">
+    
+        <label for="divisor">Divisor:</label>
+        <input type="text" id="divisor">
+        <br>
+        <br>
+        <button onclick="encodeData()">Encode Data</button>
+        <div id="remainder"></div>
+        <div id="encodedData"></div>
+        <br>
+        <br>
+        <label for="receivedData">Received Data:</label>
+        <input type="text" id="receivedData">
+        <br>
+        <br>
+        <button onclick="receiver()">Check Message</button>
+        <div id="result"></div>
+        </center> 
+      </div>
+
+      <script>
+          
+function xor(a, b) {
+  let result = "";
+  const n = b.length;
+  for (let i = 1; i < n; i++) {
+    if (a[i] === b[i]) result += "0";
+    else result += "1";
+  }
+  return result;
+}
+
+function mod2div(dividend, divisor) {
+  let pick = divisor.length;
+  let tmp = dividend.substr(0, pick);
+  const n = dividend.length;
+
+  while (pick < n) {
+    if (tmp[0] === "1") tmp = xor(divisor, tmp) + dividend[pick];
+    else tmp = xor("0".repeat(pick), tmp) + dividend[pick];
+
+    pick += 1;
+  }
+
+  if (tmp[0] === "1") tmp = xor(divisor, tmp);
+  else tmp = xor("0".repeat(pick), tmp);
+
+  return tmp;
+}
+function encodeData() {
+  const dividendInput = document.getElementById("dividend");
+  const divisorInput = document.getElementById("divisor");
+
+  const dividend = dividendInput.value;
+  const divisor = divisorInput.value;
+
+  if (!dividend || !divisor) {
+    // Handle case when input fields are empty
+    return;
+  }
+
+  const l_key = divisor.length;
+  const appended_data = dividend + "0".repeat(l_key - 1);
+  const remainder = mod2div(appended_data, divisor);
+  const codeword = dividend + remainder;
+
+  document.getElementById("remainder").textContent =
+    "Remainder: " + remainder;
+  document.getElementById("encodedData").textContent =
+    "Encoded Data (Data + Remainder): " + codeword;
+}
+
+function receiver() {
+  const dataInput = document.getElementById("receivedData");
+  const keyInput = document.getElementById("divisor");
+
+  const data = dataInput.value;
+  const key = keyInput.value;
+
+  if (!data || !key) {
+    // Handle case when input fields are empty
+    return;
+  }
+
+  let currxor = mod2div(data.substr(0, key.length), key);
+  let curr = key.length;
+  while (curr !== data.length) {
+    if (currxor.length !== key.length) {
+      currxor += data[curr++];
+    } else {
+      currxor = mod2div(currxor, key);
+    }
+  }
+
+  if (currxor.length === key.length) {
+    currxor = mod2div(currxor, key);
+  }
+
+  if (currxor.indexOf("1") !== -1) {
+    document.getElementById("result").textContent =
+      "There is some error in data";
+  } else {
+    document.getElementById("result").textContent =
+      "Correct message received";
+  }
+}
+
+
+console.log("Sender side...");
+encodeData(data, key);
+
+console.log("\nReceiver side...");
+receiver(data + mod2div(data + "0".repeat(key.length - 1), key), key);
+
+      </script> 
+  </body>
+</html>
