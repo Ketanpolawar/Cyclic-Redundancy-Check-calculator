@@ -10,7 +10,7 @@ A cyclic redundancy check (CRC) is an error-detecting code commonly used in digi
 4. Network Protocols and Routing
 
 
-![Image Alt text](/CRC.png
+## Snapshot
 
 ![Image Alt text](/CRC.png "Optional title"))
 
