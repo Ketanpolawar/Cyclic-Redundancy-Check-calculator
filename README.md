@@ -4,11 +4,10 @@ A cyclic redundancy check (CRC) is an error-detecting code commonly used in digi
 
 
 ## Usage
-1.Storage Systems
-2. File Transfer Protocols
-3. Error Detection in Embedded Systems
-4. Digital Signatures
-5. Network Protocols and Routing
+1. File Transfer Protocols
+2. Error Detection in Embedded Systems
+3. Digital Signatures
+4. Network Protocols and Routing
 
 
 ## Snapshot
