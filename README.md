@@ -11,7 +11,6 @@ A cyclic redundancy check (CRC) is an error-detecting code commonly used in digi
 
 
 ## Snapshot
-
 ![Image Alt text](/CRC.png "Optional title"))
 
 
